@@ -1,10 +1,10 @@
-from pathlib import Path
 import time
 
-from microservice_demo import dir_data
+import pytest
 
 
-def test_get_dir_data(tmp_path):
+@pytest.fixture
+def make_test_dir(tmp_path):
     test_folder = tmp_path / "test_folder"
     test_folder.mkdir()
     test_subfolder = test_folder / "test_subfolder"
@@ -16,8 +16,7 @@ def test_get_dir_data(tmp_path):
     test_file_1.write_text("0")
     test_file_2.write_text("01")
 
-    print(test_file_1)
-    estimated_output = {
+    output = {
         "data": [
             {
                 "name": "test_file_1.txt",
@@ -42,5 +41,4 @@ def test_get_dir_data(tmp_path):
         ]
     }
 
-    assert dir_data.get_dir_data(test_folder) == estimated_output
-
+    return (test_folder, output)
