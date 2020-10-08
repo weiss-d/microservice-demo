@@ -7,6 +7,7 @@ def sort_entires(key: Dict[str, str]) -> str:
     """Function for sorting folder items by type and then by name."""
     return (key["type"], key["name"])
 
+
 def get_dir_data(path: Path) -> Dict[str, Any]:
     """Returns list of files and folders in given directory sorted by type and by name."""
     output_dict = {"data": []}
