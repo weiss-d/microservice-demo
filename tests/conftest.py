@@ -21,22 +21,22 @@ def make_test_dir(tmp_path):
             {
                 "name": "test_file_1.txt",
                 "type": "file",
-                "time": time.ctime(test_file_1.stat().st_mtime)
+                "time": time.ctime(test_file_1.stat().st_mtime),
             },
             {
                 "name": "test_file_2.log",
                 "type": "file",
-                "time": time.ctime(test_file_2.stat().st_mtime)
+                "time": time.ctime(test_file_2.stat().st_mtime),
             },
             {
                 "name": "test_another_subfolder",
                 "type": "folder",
-                "time": time.ctime(test_another_subfolder.stat().st_mtime)
+                "time": time.ctime(test_another_subfolder.stat().st_mtime),
             },
             {
                 "name": "test_subfolder",
                 "type": "folder",
-                "time": time.ctime(test_subfolder.stat().st_mtime)
+                "time": time.ctime(test_subfolder.stat().st_mtime),
             },
         ]
     }
