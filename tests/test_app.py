@@ -23,7 +23,7 @@ def test_api_request(client):
     assert b"Wrong request" in response.data
 
 
-def test_api_request(client, make_test_dir):
+def test_api_meta_request(client, make_test_dir):
     app.config["ROOT_DIR"], estimated_output = make_test_dir
     response = client.get("/api/meta")
     assert json.loads(response.data) == estimated_output

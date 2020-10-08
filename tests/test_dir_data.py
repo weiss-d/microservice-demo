@@ -1,5 +1,3 @@
-from pathlib import Path
-
 from microservice_demo import dir_data
 
 
