@@ -2,7 +2,7 @@ import json
 
 import pytest
 
-from microservice_demo.app import app
+from ..app import app
 
 
 @pytest.fixture

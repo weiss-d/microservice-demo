@@ -1,0 +1,6 @@
+.git
+.cache
+*.pyc
+.nox
+.pytest_chache
+__pycache__

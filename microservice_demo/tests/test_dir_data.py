@@ -1,4 +1,4 @@
-from microservice_demo import dir_data
+from .. import dir_data
 
 
 def test_get_dir_data(make_test_dir):

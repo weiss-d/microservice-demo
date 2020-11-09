@@ -1,4 +1,5 @@
 import os
+import sys
 from pathlib import Path
 import re
 
@@ -6,6 +7,9 @@ from flask import Flask, jsonify
 import waitress
 
 from microservice_demo import dir_data
+
+
+sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
 
 
 app = Flask(__name__)
