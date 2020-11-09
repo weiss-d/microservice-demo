@@ -1,1 +1,1 @@
-ROOT_DIR = "/tmp"
+ROOT_DIR = "/home"

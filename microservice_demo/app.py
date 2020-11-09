@@ -1,7 +1,9 @@
+import logging
+import re
+from string import Template
 import os
 import sys
 from pathlib import Path
-import re
 
 from flask import Flask, jsonify
 import waitress
@@ -11,6 +13,24 @@ from microservice_demo import dir_data
 
 app = Flask(__name__)
 app.config.from_pyfile("config.py", silent=True)
+
+
+logging.basicConfig(
+    level=logging.INFO,
+    format="[%(asctime)s] %(message)s",
+    datefmt="%d-%m-%y %H:%M:%S",
+)
+
+ROOT_DIR = Path(app.config["ROOT_DIR"])
+
+# Templates are used instead of string interpolation for security reasons.
+LOGGING_INFO_FOLDER_PROCESSING = Template(
+    "Done processing request for folder: $folder."
+)
+LOGGING_INFO_FOLDER_ERROR = Template("ERROR in processing $folder: $error.")
+
+if not ROOT_DIR.exists():
+    logging.warning("WARNING: Root directory specified in config.py doesn't exist.")
 
 
 @app.after_request
@@ -37,9 +57,16 @@ def api_url():
     )
 
 
-@app.route("/api/meta")
-def api_meta_url():
-    return jsonify(dir_data.get_dir_data(Path(app.config["ROOT_DIR"])))
+@app.route("/api/meta/<folder>")
+def api_meta_url(folder):
+    try:
+        response = dir_data.get_dir_data(ROOT_DIR / folder)
+        logging.info(LOGGING_INFO_FOLDER_PROCESSING.substitute(folder=folder))
+    except Exception as e:
+        e = str(e)
+        response = {"error": e}
+        logging.info(LOGGING_INFO_FOLDER_ERROR.substitute(folder=folder, error=e))
+    return jsonify(response)
 
 
 if __name__ == "__main__":
