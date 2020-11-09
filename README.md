@@ -30,6 +30,6 @@ Output is in JSON format:
 If specified folder doesn't exist output will be:
 ```javascript
 {
-	"error": "<Python error message>"
+    "error": "<Python error message>"
 }
 ```
