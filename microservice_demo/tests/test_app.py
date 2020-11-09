@@ -27,4 +27,4 @@ def test_api_request(client):
 def test_api_meta_request(client, make_test_dir):
     _, estimated_output = make_test_dir
     response = client.get("/api/meta", follow_redirects=True)
-    assert json.loads(response.data) == estimated_output
+    assert json.loads(response.data) == {"data": estimated_output}

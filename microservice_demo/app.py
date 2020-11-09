@@ -2,12 +2,15 @@ import logging
 import re
 from string import Template
 import os
-from pathlib import Path
 
 from flask import Flask, jsonify
+from flask.wrappers import Response
 import waitress
 
 from microservice_demo import dir_data
+
+
+# Initializing Flask app and logging
 
 
 app = Flask(__name__)
@@ -30,8 +33,20 @@ LOGGING_INFO_FOLDER_ERROR = Template("ERROR in processing '$folder': $error.")
 
 
 @app.after_request
-def add_hostname_header(response):
-    """Adding location to a response header."""
+def add_hostname_header(response: Response) -> Response:
+    """Adding Docker container info to a response header for debugging possibilities.
+
+    Parameters
+    ----------
+    response : Response
+        Initial Flask response.
+
+    Returns
+    -------
+    Response
+        Flask response with added Docker container info.
+
+    """
     env_host = str(os.environ.get("HOSTNAME"))
     hostname = re.findall(r"[a-z]{3}-\d$", env_host)
     if hostname:
@@ -39,25 +54,57 @@ def add_hostname_header(response):
     return response
 
 
+# Routes
+
+
 @app.route("/")
 @app.route("/api/")
-def root_url():
+def root_url() -> str:
+    """Root API route.
+
+    Returns
+    -------
+    str
+        Error and message about API usage.
+
+    """
     return "Folder data microservice.\nWrong request. Use /api/meta/<folder> to get folder list."
 
 
 @app.route("/api/meta/")
-def api_meta_url():
+def api_meta_url() -> Response:
+    """Base API route.
+
+    Returns
+    -------
+    Response
+        List of file/forder data of the rood directory specified in 'config.py' in JSON format.
+
+    """
     logging.info(
         LOGGING_INFO_FOLDER_PROCESSING.substitute(folder=app.config["ROOT_DIR_PATH"])
     )
-    return jsonify(dir_data.get_dir_data(app.config["ROOT_DIR_PATH"]))
+    return jsonify({"data": dir_data.get_dir_data(app.config["ROOT_DIR_PATH"])})
 
 
 @app.route("/api/meta/<path:folder>")
-def api_meta_folder_url(folder):
+def api_meta_folder_url(folder: str) -> Response:
+    """Main API route for retrieving data for subfolders.
+
+    Parameters
+    ----------
+    folder : str
+        A subfolder of a root forlder.
+
+    Returns
+    -------
+    Response
+        List of file/folder data of given subfolder in JSON format.
+
+    """
     abs_folder = app.config["ROOT_DIR_PATH"] / folder
     try:
-        response = dir_data.get_dir_data(abs_folder)
+        response = {"data": dir_data.get_dir_data(abs_folder)}
         logging.info(LOGGING_INFO_FOLDER_PROCESSING.substitute(folder=abs_folder))
     except Exception as e:
         e = str(e)
