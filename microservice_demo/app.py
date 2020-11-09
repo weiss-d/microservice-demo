@@ -24,12 +24,12 @@ ROOT_DIR = Path(app.config["ROOT_DIR"])
 
 # Templates are used instead of string interpolation for security reasons.
 LOGGING_INFO_FOLDER_PROCESSING = Template(
-    "Done processing request for folder: $folder."
+    "Done processing request for folder '$folder'."
 )
-LOGGING_INFO_FOLDER_ERROR = Template("ERROR in processing $folder: $error.")
+LOGGING_INFO_FOLDER_ERROR = Template("ERROR in processing '$folder': $error.")
 
 if not ROOT_DIR.exists():
-    logging.warning("WARNING: Root directory specified in config.py doesn't exist.")
+    logging.warning("WARNING: Root directory specified in 'config.py' doesn't exist.")
 
 
 @app.after_request
@@ -43,28 +43,27 @@ def add_hostname_header(response):
 
 
 @app.route("/")
+@app.route("/api/")
 def root_url():
     return (
-        "Folder data microservice.\nWrong request. Use /api/meta to get directory list."
+        "Folder data microservice.\nWrong request. Use /api/meta/<folder> to get folder list."
     )
 
+@app.route("/api/meta/")
+def api_meta_url():
+    logging.info(LOGGING_INFO_FOLDER_PROCESSING.substitute(folder=ROOT_DIR))
+    return jsonify(dir_data.get_dir_data(ROOT_DIR))
 
-@app.route("/api")
-def api_url():
-    return (
-        "Folder data microservice.\nWrong request. Use /api/meta to get directory list."
-    )
-
-
-@app.route("/api/meta/<folder>")
-def api_meta_url(folder):
+@app.route("/api/meta/<path:folder>")
+def api_meta_folder_url(folder):
+    abs_folder = ROOT_DIR / folder
     try:
-        response = dir_data.get_dir_data(ROOT_DIR / folder)
-        logging.info(LOGGING_INFO_FOLDER_PROCESSING.substitute(folder=folder))
+        response = dir_data.get_dir_data(abs_folder)
+        logging.info(LOGGING_INFO_FOLDER_PROCESSING.substitute(folder=abs_folder))
     except Exception as e:
         e = str(e)
         response = {"error": e}
-        logging.info(LOGGING_INFO_FOLDER_ERROR.substitute(folder=folder, error=e))
+        logging.info(LOGGING_INFO_FOLDER_ERROR.substitute(folder=abs_folder, error=e))
     return jsonify(response)
 
 
