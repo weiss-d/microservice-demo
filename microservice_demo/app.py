@@ -1,7 +1,18 @@
+"""
+Simple demo of microservice in Flask.
+
+Personal project for learning Flask and Docker.
+
+The app returns a list of files and folders and some of their properties
+from given subdirectory of a directory specified in 'cofig.py'.
+
+    $ pip install -r requirements.txt
+    $ python -m microservice_demo.app
+"""
 import logging
+import os
 import re
 from string import Template
-import os
 
 from flask import Flask, jsonify
 from flask.wrappers import Response
@@ -60,7 +71,7 @@ def add_hostname_header(response: Response) -> Response:
 @app.route("/")
 @app.route("/api/")
 def root_url() -> str:
-    """Root API route.
+    """Root API route. No functions.
 
     Returns
     -------
@@ -73,7 +84,7 @@ def root_url() -> str:
 
 @app.route("/api/meta/")
 def api_meta_url() -> Response:
-    """Base API route.
+    """Base API route. Returns data of the configured root folder.
 
     Returns
     -------
@@ -94,7 +105,7 @@ def api_meta_folder_url(folder: str) -> Response:
     Parameters
     ----------
     folder : str
-        A subfolder of a root forlder.
+        Any level subfolder of a root forlder.
 
     Returns
     -------

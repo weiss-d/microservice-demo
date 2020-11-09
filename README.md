@@ -33,3 +33,17 @@ If specified folder doesn't exist output will be:
     "error": "<Python error message>"
 }
 ```
+## Install & Run
+```bash
+$ python -m venv venv
+$ source venv/bin/activate
+$ pip install -r requirements.txt
+$ python -m microservice_demo.app
+```
+## Docker
+```bash
+$ docker build . -t microservice_demo
+$ docker run --rm -it -p 5000:5000 microservice_demo
+```
+## Questions
+This in a training project, but if you stumled upon it searching for examples and have any questions - feel free to ask them with an issue.
