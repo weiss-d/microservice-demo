@@ -42,14 +42,16 @@ def add_hostname_header(response):
 @app.route("/")
 @app.route("/api/")
 def root_url():
-    return (
-        "Folder data microservice.\nWrong request. Use /api/meta/<folder> to get folder list."
-    )
+    return "Folder data microservice.\nWrong request. Use /api/meta/<folder> to get folder list."
+
 
 @app.route("/api/meta/")
 def api_meta_url():
-    logging.info(LOGGING_INFO_FOLDER_PROCESSING.substitute(folder=app.config["ROOT_DIR_PATH"]))
+    logging.info(
+        LOGGING_INFO_FOLDER_PROCESSING.substitute(folder=app.config["ROOT_DIR_PATH"])
+    )
     return jsonify(dir_data.get_dir_data(app.config["ROOT_DIR_PATH"]))
+
 
 @app.route("/api/meta/<path:folder>")
 def api_meta_folder_url(folder):

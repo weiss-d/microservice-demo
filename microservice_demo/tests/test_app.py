@@ -8,7 +8,7 @@ from ..app import app
 @pytest.fixture
 def client(make_test_dir):
     app.config["TESTING"] = True
-    app.config["ROOT_DIR_PATH"], _ = make_test_dir 
+    app.config["ROOT_DIR_PATH"], _ = make_test_dir
 
     with app.test_client() as client:
         yield client
