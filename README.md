@@ -46,4 +46,4 @@ $ docker build . -t microservice_demo
 $ docker run --rm -it -p 5000:5000 microservice_demo
 ```
 ## Questions
-This in a training project, but if you stumled upon it searching for examples and have any questions - feel free to ask them with an issue.
+This in a training project, but if you stumbled upon it searching for examples and have any questions - feel free to ask them through an issue.
