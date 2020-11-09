@@ -9,9 +9,6 @@ import waitress
 from microservice_demo import dir_data
 
 
-sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
-
-
 app = Flask(__name__)
 app.config.from_pyfile("config.py", silent=True)
 
