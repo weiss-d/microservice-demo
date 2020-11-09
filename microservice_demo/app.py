@@ -2,7 +2,6 @@ import logging
 import re
 from string import Template
 import os
-import sys
 from pathlib import Path
 
 from flask import Flask, jsonify
