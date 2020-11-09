@@ -13,23 +13,20 @@ from microservice_demo import dir_data
 app = Flask(__name__)
 app.config.from_pyfile("config.py", silent=True)
 
-
 logging.basicConfig(
     level=logging.INFO,
     format="[%(asctime)s] %(message)s",
     datefmt="%d-%m-%y %H:%M:%S",
 )
 
-ROOT_DIR = Path(app.config["ROOT_DIR"])
+if not app.config["ROOT_DIR_PATH"].exists():
+    logging.warning("WARNING: Root directory specified in 'config.py' doesn't exist.")
 
 # Templates are used instead of string interpolation for security reasons.
 LOGGING_INFO_FOLDER_PROCESSING = Template(
     "Done processing request for folder '$folder'."
 )
 LOGGING_INFO_FOLDER_ERROR = Template("ERROR in processing '$folder': $error.")
-
-if not ROOT_DIR.exists():
-    logging.warning("WARNING: Root directory specified in 'config.py' doesn't exist.")
 
 
 @app.after_request
@@ -51,12 +48,12 @@ def root_url():
 
 @app.route("/api/meta/")
 def api_meta_url():
-    logging.info(LOGGING_INFO_FOLDER_PROCESSING.substitute(folder=ROOT_DIR))
-    return jsonify(dir_data.get_dir_data(ROOT_DIR))
+    logging.info(LOGGING_INFO_FOLDER_PROCESSING.substitute(folder=app.config["ROOT_DIR_PATH"]))
+    return jsonify(dir_data.get_dir_data(app.config["ROOT_DIR_PATH"]))
 
 @app.route("/api/meta/<path:folder>")
 def api_meta_folder_url(folder):
-    abs_folder = ROOT_DIR / folder
+    abs_folder = app.config["ROOT_DIR_PATH"] / folder
     try:
         response = dir_data.get_dir_data(abs_folder)
         logging.info(LOGGING_INFO_FOLDER_PROCESSING.substitute(folder=abs_folder))
