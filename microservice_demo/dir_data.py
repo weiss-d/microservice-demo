@@ -7,24 +7,6 @@ import time
 from typing import Dict, List
 
 
-def sort_entires(key: Dict[str, str]) -> str:
-    """Function for sorting file and folder items by type and then by name.
-
-    Parameters
-    ----------
-    key : Dict[str, str]
-        Dictionary, that contains file or folder metadata.
-
-    Returns
-    -------
-    str
-        A tuple of file/folder type and name for 'sort' function.
-
-    """
-
-    return (key["type"], key["name"])
-
-
 def get_dir_data(path: Path) -> List[Dict[str, str]]:
     """Returns list of files and folders in given directory sorted by type and by name.
 
@@ -57,6 +39,6 @@ def get_dir_data(path: Path) -> List[Dict[str, str]]:
                 "time": time.ctime(item.stat().st_mtime),
             }
         )
-    output_list.sort(key=sort_entires)
+    output_list.sort(key=lambda x: (x["type"], x["name"]))
 
     return output_list
